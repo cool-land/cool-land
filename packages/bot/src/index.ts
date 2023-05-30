@@ -14,6 +14,7 @@ export interface IBoter {
   scanStatus?: ScanStatus;
   qrCode?: string;
   loginer?: string;
+  botName: string;
 }
 
 export default class BotManager extends EventEmitter {
@@ -32,8 +33,12 @@ export default class BotManager extends EventEmitter {
       const child = fork(path.resolve(__dirname, "./bot.js"));
       if (!child || !child.pid) return false;
       const { pid } = child;
+      const botName = "island" + pid;
       child.send({
         type: "create",
+        payload: {
+          name: botName,
+        },
       });
 
       child.addListener("message", function onMsg(msg: IBotMsg) {
@@ -47,6 +52,7 @@ export default class BotManager extends EventEmitter {
                 bot: child,
                 ststus: "started",
                 loginStatus: false,
+                botName,
               });
               resolve(pid);
             } else {
@@ -97,28 +103,47 @@ export default class BotManager extends EventEmitter {
     if (!bot) return;
     bot.bot.kill();
     this.botPool.delete(pid);
+    return true;
   }
 
   stopBot(pid: number) {
-    const bot = this.botPool.get(pid);
-    if (!bot) return;
-    bot.bot.send({
-      type: "stop",
+    return new Promise((resolve, reject) => {
+      const boter = this.botPool.get(pid);
+      if (!boter || !boter.bot) {
+        reject(false);
+        return;
+      }
+      const { bot } = boter;
+      bot.send({
+        type: "stop",
+      });
+      bot.on("message", function onMsg(msg: any) {
+        if (msg.type === "stop" && msg.pid === bot.pid) {
+          resolve(msg.pid);
+          boter.ststus = "stopped";
+        } else {
+          reject(false);
+        }
+        bot.removeListener("message", onMsg);
+      });
+      boter.ststus = "stopped";
     });
-    bot.ststus = "stopped";
   }
 
   startBot(pid: number) {
     return new Promise<boolean>((resolve, reject) => {
       const boter = this.botPool.get(pid);
-      if (!boter || !boter.bot) return;
+      if (!boter || !boter.bot) {
+        reject(false);
+        return;
+      }
       const { bot } = boter;
       bot.send({
         type: "start",
       });
       bot.on("message", function onMsg(msg: any) {
-        if (msg.type === "bot" && msg.pid === bot.pid) {
-          resolve(true);
+        if (msg.type === "start" && msg.pid === bot.pid) {
+          resolve(msg.pid);
           boter.ststus = "started";
         } else {
           reject(false);

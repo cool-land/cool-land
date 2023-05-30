@@ -8,12 +8,15 @@ const config = {
   small: true, // default: false - the size of the printed QR Code in terminal
 };
 
-export interface IBotOptions {}
+export interface IBotOptions {
+  name: string;
+}
 let bot: WechatyInterface;
 
 export function runBot(options: IBotOptions) {
+  const { name } = options;
   bot = WechatyBuilder.build({
-    name: "island",
+    name,
     puppet: "wechaty-puppet-wechat",
     puppetOptions: {
       uos: true,

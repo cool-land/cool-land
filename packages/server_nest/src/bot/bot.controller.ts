@@ -9,12 +9,16 @@ import {
   Inject,
   ParseIntPipe,
   Header,
+  HttpException,
+  UseFilters,
+  HttpStatus,
 } from '@nestjs/common';
 import { BotService } from './bot.service';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { UpdateBotDto } from './dto/update-bot.dto';
 import BotFactory from '@cool-land/bot';
 import * as QRCode from 'qrcode';
+import { HttpExceptionFilter } from 'src/core/filter/http-exception.filter';
 
 @Controller('bot')
 export class BotController {
@@ -32,18 +36,41 @@ export class BotController {
   }
 
   @Post('start/:pid')
-  startBot(@Param('pid', ParseIntPipe) pid: number) {
-    this.botManager.startBot(pid);
+  async startBot(@Param('pid', ParseIntPipe) pid: number) {
+    return this.botManager
+      .startBot(pid)
+      .then((pid) => {
+        console.log(pid);
+        return `pid: ${pid} started`;
+      })
+      .catch((e) => {
+        throw new HttpException('机器人不存在', HttpStatus.BAD_REQUEST);
+      });
+  }
+
+  @Post('stop/:pid')
+  async stopBot(@Param('pid', ParseIntPipe) pid: number) {
+    try {
+      await this.botManager.stopBot(pid);
+      return `pid: ${pid} stopped`;
+    } catch (error) {
+      throw new HttpException('机器人不存在', HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('all')
   getAllBot() {
-    return this.botManager.botPool;
+    return this.botManager.getAllBot();
   }
 
   @Get('get/:pid')
   getBot(@Param('pid', ParseIntPipe) pid: number) {
     return this.botManager.getBot(pid);
+  }
+
+  @Post('remove/:pid')
+  removeBot(@Param('pid', ParseIntPipe) pid: number) {
+    return this.botManager.removeBot(pid);
   }
 
   @Get('getQrcode/:pid')
@@ -54,30 +81,5 @@ export class BotController {
       return null;
     }
     return QRCode.toDataURL(qrCode);
-  }
-
-  @Post()
-  create(@Body() createBotDto: CreateBotDto) {
-    return this.botService.create(createBotDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.botService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.botService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBotDto: UpdateBotDto) {
-    return this.botService.update(+id, updateBotDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.botService.remove(+id);
   }
 }

@@ -37,7 +37,9 @@ process.on("message", (message: any) => {
   const { type } = message;
   switch (type) {
     case "create":
-      runBot({})
+      runBot({
+        name: message.payload.name,
+      })
         .then(() => {
           process.send?.({
             type: "create",
@@ -56,7 +58,12 @@ process.on("message", (message: any) => {
         });
       break;
     case "stop":
-      bot.stop();
+      bot.stop().then(() => {
+        process.send?.({
+          type: "stop",
+          pid: process.pid,
+        });
+      });
       break;
     case "start":
       bot.start().then(() => {
