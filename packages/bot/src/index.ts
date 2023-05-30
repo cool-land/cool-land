@@ -13,7 +13,7 @@ export interface IBoter {
   loginStatus: boolean;
   scanStatus?: ScanStatus;
   qrCode?: string;
-  loginer?: string;
+  loginer?: any;
   botName: string;
 }
 
@@ -27,11 +27,11 @@ export default class BotManager extends EventEmitter {
   }
 
   createBot() {
-    return new Promise((resolve, reject) => {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      const self = this;
+    try {
       const child = fork(path.resolve(__dirname, "./bot.js"));
-      if (!child || !child.pid) return false;
+      if (!child || !child.pid) {
+        return false;
+      }
       const { pid } = child;
       const botName = "island" + pid;
       child.send({
@@ -40,53 +40,73 @@ export default class BotManager extends EventEmitter {
           name: botName,
         },
       });
-
-      child.addListener("message", function onMsg(msg: IBotMsg) {
-        const { type } = msg;
-        switch (type) {
-          case "create": {
-            const { status, pid, payload } = msg;
-            if (status === "success") {
-              self.botPool.set(pid, {
-                pid,
-                bot: child,
-                ststus: "started",
-                loginStatus: false,
-                botName,
-              });
-              resolve(pid);
-            } else {
-              reject(payload);
-            }
-            break;
-          }
-          case "scan": {
-            const {
-              payload,
-            }: {
-              pid: number;
-              payload: {
-                qrcode: string;
-                status: ScanStatus;
-                data?: string;
-              };
-            } = msg;
-            const { status, qrcode } = payload;
-            const boter = self.botPool.get(pid);
-            if (!boter) return;
-            boter.scanStatus = status;
-            boter.qrCode = qrcode;
-            break;
-          }
-          case "login": {
-            const { payload } = msg;
-            const boter = self.botPool.get(pid);
-            if (!boter) return;
-            boter.loginStatus = true;
-            boter.loginer = payload;
-          }
-        }
+      this.botPool.set(pid, {
+        pid,
+        bot: child,
+        ststus: "stopped",
+        loginStatus: false,
+        botName,
       });
+      this.listen(child);
+      return {
+        pid,
+        name: botName,
+      };
+    } catch (error: any) {
+      console.log(error);
+      return false;
+    }
+  }
+
+  listen(bot: ChildProcess) {
+    const { pid } = bot;
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this;
+    const boter = self.botPool.get(pid!);
+    console.log(boter);
+
+    if (!boter) return;
+    bot.addListener("message", function onMsg(msg: IBotMsg) {
+      const { type } = msg;
+      switch (type) {
+        case "create": {
+          const { status } = msg;
+          if (status === "success") {
+            boter.ststus = "started";
+          } else {
+            boter.ststus = "stopped";
+          }
+          break;
+        }
+        case "scan": {
+          const {
+            payload,
+          }: {
+            pid: number;
+            payload: {
+              qrcode: string;
+              status: ScanStatus;
+              data?: string;
+            };
+          } = msg;
+          console.log("scan");
+
+          const { status, qrcode } = payload;
+          boter.scanStatus = status;
+          boter.qrCode = qrcode;
+          break;
+        }
+        case "login": {
+          const { payload } = msg;
+          boter.loginStatus = true;
+          boter.loginer = payload;
+          break;
+        }
+        case "logout": {
+          boter.loginStatus = false;
+          boter.loginer = null;
+        }
+      }
     });
   }
 
@@ -118,7 +138,7 @@ export default class BotManager extends EventEmitter {
         type: "stop",
       });
       bot.on("message", function onMsg(msg: any) {
-        if (msg.type === "stop" && msg.pid === bot.pid) {
+        if (msg.type === "stop" && msg.status === "success") {
           resolve(msg.pid);
           boter.ststus = "stopped";
         } else {
@@ -142,7 +162,7 @@ export default class BotManager extends EventEmitter {
         type: "start",
       });
       bot.on("message", function onMsg(msg: any) {
-        if (msg.type === "start" && msg.pid === bot.pid) {
+        if (msg.type === "start" && msg.status === "success") {
           resolve(msg.pid);
           boter.ststus = "started";
         } else {

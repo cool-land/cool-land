@@ -7,7 +7,8 @@ export type BotMsgType =
   | "error"
   | "message"
   | "login"
-  | "scan";
+  | "scan"
+  | "logout";
 
 export interface IBotMsg {
   type: BotMsgType;

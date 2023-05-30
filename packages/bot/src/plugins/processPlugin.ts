@@ -27,53 +27,14 @@ export const processPlugin = (options = {}) => {
           type: "message",
           payload: msg,
         });
+      })
+      .on("heartbeat", (data) => {
+        console.log(data);
+      })
+      .on("logout", () => {
+        process.send?.({
+          type: "logout",
+        });
       });
   };
 };
-
-process.on("message", (message: any) => {
-  console.log("message", message);
-
-  const { type } = message;
-  switch (type) {
-    case "create":
-      runBot({
-        name: message.payload.name,
-      })
-        .then(() => {
-          process.send?.({
-            type: "create",
-            status: "success",
-            payload: null,
-            pid: process.pid,
-          });
-        })
-        .catch((e) => {
-          process.send?.({
-            type: "create",
-            status: "error",
-            payload: e,
-            pid: process.pid,
-          });
-        });
-      break;
-    case "stop":
-      bot.stop().then(() => {
-        process.send?.({
-          type: "stop",
-          pid: process.pid,
-        });
-      });
-      break;
-    case "start":
-      bot.start().then(() => {
-        process.send?.({
-          type: "start",
-          pid: process.pid,
-        });
-      });
-      break;
-    default:
-      break;
-  }
-});

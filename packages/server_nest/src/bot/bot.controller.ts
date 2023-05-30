@@ -29,10 +29,8 @@ export class BotController {
 
   @Post('create')
   async createBot() {
-    return this.botManager.createBot().then((pid) => {
-      console.log(pid);
-      return `pid: ${pid} created`;
-    });
+    const res = this.botManager.createBot();
+    return res;
   }
 
   @Post('start/:pid')

@@ -27,6 +27,7 @@ export function runBot(options: IBotOptions) {
 
   bot.use(keyResPlugins());
 
+  // 用于进程间交互
   bot.use(processPlugin());
 
   return bot
@@ -36,3 +37,72 @@ export function runBot(options: IBotOptions) {
     })
     .catch((e) => log.error("StarterBot", e));
 }
+
+process.on("message", (message: any) => {
+  console.log("message", message);
+
+  const { type } = message;
+  switch (type) {
+    case "create":
+      runBot({
+        name: message.payload.name,
+      })
+        .then(() => {
+          process.send?.({
+            type: "create",
+            status: "success",
+            payload: null,
+            pid: process.pid,
+          });
+        })
+        .catch((err) => {
+          process.send?.({
+            type: "create",
+            status: "error",
+            pid: process.pid,
+            payload: err?.message,
+          });
+        });
+      break;
+    case "stop":
+      bot
+        .stop()
+        .then(() => {
+          process.send?.({
+            type: "stop",
+            pid: process.pid,
+            status: "success",
+          });
+        })
+        .catch((err) => {
+          process.send?.({
+            type: "stop",
+            pid: process.pid,
+            status: "error",
+            payload: err?.message,
+          });
+        });
+      break;
+    case "start":
+      bot
+        .start()
+        .then(() => {
+          process.send?.({
+            type: "start",
+            status: "success",
+            pid: process.pid,
+          });
+        })
+        .catch((err) => {
+          process.send?.({
+            type: "start",
+            pid: process.pid,
+            status: "error",
+            payload: err?.message,
+          });
+        });
+      break;
+    default:
+      break;
+  }
+});
