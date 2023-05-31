@@ -5,8 +5,8 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "dev": "ts-node ./src/index.ts",
-    "build": "tsc -w",
+    "dev": "tsc -w",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

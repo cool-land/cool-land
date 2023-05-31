@@ -14,11 +14,9 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { BotService } from './bot.service';
-import { CreateBotDto } from './dto/create-bot.dto';
-import { UpdateBotDto } from './dto/update-bot.dto';
+
 import BotFactory from '@cool-land/bot';
 import * as QRCode from 'qrcode';
-import { HttpExceptionFilter } from 'src/core/filter/http-exception.filter';
 
 @Controller('bot')
 export class BotController {

@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateBotDto } from './dto/create-bot.dto';
 import { UpdateBotDto } from './dto/update-bot.dto';
+import BotFactory from '@cool-land/bot';
 
 @Injectable()
 export class BotService {
-  create(createBotDto: CreateBotDto) {
-    return 'This action adds a new bot';
+  @Inject('BotManager')
+  private readonly botManager: BotFactory;
+
+  async createBot() {
+    const res = this.botManager.createBot();
+    return res;
   }
 
   findAll() {
