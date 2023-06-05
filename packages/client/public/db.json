@@ -1,0 +1,11 @@
+{
+  "menu": [
+    {
+      "path": "/home",
+      "element": "Home/index",
+      "label": "首页",
+      "icon": "DashboardOutlined"
+    }
+  ]
+
+}
