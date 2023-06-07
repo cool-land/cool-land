@@ -6,7 +6,9 @@
   "scripts": {
     "dev:comp": "pnpm -F @cool-land/components dev",
     "dev:client": "pnpm -F @cool-land/client dev",
-    "dev:server": "pnpm -F @cool-land/server dev:watch",
+    "dev:bot": "pnpm -F @cool-land/bot dev",
+    "dev:server_nest": "pnpm -F @cool-land/server_nest start:dev",
+    "build:bot": "pnpm -F @cool-land/bot build",
     "build:client": "pnpm -F @cool-land/client build",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
