@@ -27,7 +27,7 @@ export class BotController {
 
   @Post('create')
   async createBot() {
-    const res = this.botManager.createBot();
+    const res = this.botService.createBot();
     return res;
   }
 
@@ -77,5 +77,10 @@ export class BotController {
       return null;
     }
     return QRCode.toDataURL(qrCode);
+  }
+
+  @Get('getAll')
+  async getAll() {
+    return this.botService.findAll();
   }
 }
