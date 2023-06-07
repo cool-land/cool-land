@@ -1,17 +1,24 @@
-import { RouterProvider } from "react-router-dom";
-import { router } from "./router";
-import { Provider } from "react-redux";
-import { store } from "./store";
-import "./service/index";
+import { BrowserRouter } from "react-router-dom";
 
-function App() {
+import Router from "./router";
+import AuthRouter from "./router/utils/AuthRouter";
+
+const App = () => {
   return (
-    <>
-      <Provider store={store}>
-        <RouterProvider router={router} />
-      </Provider>
-    </>
+    // <ConfigProvider
+    //   theme={{
+    //     algorithm: [theme.darkAlgorithm],
+    //     token: { colorPrimary: "#1890ff" },
+    //   }}
+    //   componentSize={"middle"}>
+    <BrowserRouter>
+      <AuthRouter>
+        <Router />
+      </AuthRouter>
+    </BrowserRouter>
+
+    // </ConfigProvider>
   );
-}
+};
 
 export default App;

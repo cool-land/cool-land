@@ -1,12 +1,42 @@
-import axios from "axios";
-console.log(import.meta.env.VITE_API_URL);
+import { message } from "antd";
+import Axios from "axios";
 
-const request = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-  timeout: 1000,
-  headers: {},
+const service = Axios.create({
+  baseURL: "/apis",
 });
 
-// TODO: 增加请求拦截器，响应拦截器
+// 请求拦截器
+service.interceptors.request.use(
+  (config) => {
+    // const token = localStorage.getItem('accesstoken');
+    // (config.headers as any).accessToken = token
+    return config;
+  },
+  (error) => {
+    Promise.reject(error);
+  },
+);
 
-export default request;
+// 响应拦截器
+service.interceptors.response.use(
+  (response) => {
+    if (response.data.code === 500) {
+      message.open({
+        type: "error",
+        content: response.data.msg,
+      });
+      return Promise.reject("error");
+    } else {
+      return response.data;
+    }
+  },
+  (error) => {
+    message.open({
+      type: "error",
+      content: error.response.data.msg,
+    });
+    return Promise.reject(error);
+  },
+);
+
+export default service;
