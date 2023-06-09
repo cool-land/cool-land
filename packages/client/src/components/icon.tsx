@@ -1,18 +1,23 @@
-import * as AntIcon from "@ant-design/icons";
-import { ReactNode } from "react";
+import * as AntdIcons from "@ant-design/icons";
+import { FC } from "react";
 
 type Props = {
   type?: string;
 };
-export const Icon: FC<Props> = (props: { type: string | number }) => {
+
+const allIcons: {
+  [key: string]: any;
+} = AntdIcons;
+
+export const Icon: FC<Props> = (props) => {
   if (props.type) {
-    const MyIcon: ReactNode = AntIcon[props.type];
+    const MyIcon = allIcons[props.type];
     return <MyIcon />;
   } else {
     return <></>;
   }
 };
 
-export const IconFont = AntIcon.createFromIconfontCN({
+export const IconFont = AntdIcons.createFromIconfontCN({
   scriptUrl: ["//at.alicdn.com/t/c/font_2336614_fr949zaey9u.js"],
 });
