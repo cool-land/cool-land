@@ -7,8 +7,12 @@ import {
 } from "./modules/breadcrumbSlice";
 import { createMenuSlice, MenuSlice } from "./modules/menuSlice";
 import { createRouteSlice, RouteSlice } from "./modules/routeSlice";
+import { createThemeSlice, ThemeSlice } from "./modules/themeSlice";
 
-type StoreState = RouteSlice & MenuSlice & BreadcrumbSlice;
+type StoreState = RouteSlice & MenuSlice & BreadcrumbSlice & ThemeSlice;
+
+// reset store
+export const resetters: (() => void)[] = [];
 
 // store集合
 export const useBoundStore = create<StoreState>()(
@@ -18,6 +22,7 @@ export const useBoundStore = create<StoreState>()(
         ...createRouteSlice(...a),
         ...createMenuSlice(...a),
         ...createBreadcrumbSlice(...a),
+        ...createThemeSlice(...a),
       }),
       { name: "RootStore" },
     ),
@@ -30,3 +35,6 @@ export const useBoundStore = create<StoreState>()(
 export const useShallowBoundStore = (
   f: (state: ReturnType<(typeof useBoundStore)["getState"]>) => any,
 ) => useBoundStore(f, shallow);
+
+// reset all slice
+export const resetAllSlices = () => resetters.forEach((resetter) => resetter());

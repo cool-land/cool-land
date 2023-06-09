@@ -1,23 +1,39 @@
+import { useShallowBoundStore } from "@/store";
+import { ConfigProvider, Spin, theme } from "antd";
+import { Suspense, useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
-
 import Router from "./router";
 import AuthRouter from "./router/utils/AuthRouter";
 
 const App = () => {
-  return (
-    // <ConfigProvider
-    //   theme={{
-    //     algorithm: [theme.darkAlgorithm],
-    //     token: { colorPrimary: "#1890ff" },
-    //   }}
-    //   componentSize={"middle"}>
-    <BrowserRouter>
-      <AuthRouter>
-        <Router />
-      </AuthRouter>
-    </BrowserRouter>
+  const [themeType, colorPrimary] = useShallowBoundStore((state) => [
+    state.theme,
+    state.primaryColor,
+  ]);
+  const [algorithm, setAlgorithm] = useState();
 
-    // </ConfigProvider>
+  useEffect(() => {
+    const res: any = [];
+    if (themeType === "dark") {
+      res.push(theme.darkAlgorithm);
+    }
+    setAlgorithm(() => res);
+  }, [themeType]);
+
+  return (
+    <Suspense fallback={<Spin />}>
+      <ConfigProvider
+        theme={{
+          token: { colorPrimary },
+          algorithm,
+        }}>
+        <BrowserRouter>
+          <AuthRouter>
+            <Router />
+          </AuthRouter>
+        </BrowserRouter>
+      </ConfigProvider>
+    </Suspense>
   );
 };
 

@@ -1,17 +1,17 @@
 import BasicLayout from "@/layout";
-import { useBoundStore } from "@/store";
+import { useShallowBoundStore } from "@/store";
 import Login from "@/views/Login";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { Navigate, RouteObject, useRoutes } from "react-router-dom";
 import NotFound from "./components/404";
 import { getRoutes } from "./utils/getRoutes";
 
 const Router = () => {
   // 从store获取路由表json,该json在登录时由请求接口获取
-  const routes = useBoundStore((state) => state.routes);
+  const routes = useShallowBoundStore((state) => state.routes);
   const [children, setChildren] = useState<RouteObject[]>([]);
   // 根据路由表生成子路由
-  useEffect(() => {
+  useLayoutEffect(() => {
     const router = getRoutes(routes);
     console.log("router: ", router);
     setChildren(router);
