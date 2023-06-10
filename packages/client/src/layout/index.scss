@@ -1,14 +1,14 @@
 .layout-page {
-  &-header{
+  &-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #fff;
-    padding: 0;
+    padding: 0 20px 0 0;
     .breadcrumb {
       margin-left: 20px;
     }
-    .left,.right {
+    .left,
+    .right {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -51,11 +51,9 @@
       white-space: nowrap;
       transition: all 0.3s;
     }
-
   }
 
   .nav-content {
     height: calc(100% - 64px);
   }
 }
-
