@@ -10,6 +10,12 @@ pnpm i
 
 ## 运行
 
+项目拉取下来后，需要先build一次，因为项目中有一些依赖是需要build后才能使用的。
+
+```bash
+pnpm run prebuild
+```
+
 ### 客户端
 
 ```bash
@@ -19,7 +25,7 @@ pnpm run dev:client
 ### 服务端
 
 ```bash
-pnpm run dev:server
+pnpm run dev:server_nest
 ```
 
 ### 组件库
