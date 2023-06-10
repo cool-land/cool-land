@@ -5,6 +5,7 @@ const applyOnScan = (bot: Wechaty) => {
 
   bot.on("scan", (qrcode, status) => {
     console.log(`Scan QR Code to login: ${status}\n${qrcode}`);
+    // 发到后端
   });
 };
 
