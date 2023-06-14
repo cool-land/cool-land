@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Reply, Prisma } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateReplyDto } from './dto/create-reply.dto';
 
 @Injectable()
 export class ReplyService {
@@ -16,9 +17,12 @@ export class ReplyService {
     });
 
     if (isExist) {
-      throw new Error('同一关键字只能存在1个');
+      throw new HttpException('同一关键字只能存在1个', HttpStatus.BAD_REQUEST);
     }
-    const res = await this.prisma.reply.create({ data: params });
+
+    const res = await this.prisma.reply.create({
+      data: params,
+    });
     return res;
   }
 
@@ -28,14 +32,24 @@ export class ReplyService {
       data: {},
     });
   }
+
   async deleteReply(where: Prisma.ReplyWhereUniqueInput): Promise<Reply> {
     return this.prisma.reply.delete({
       where,
     });
   }
+
   async getReply(id: number): Promise<Reply | null> {
     return this.prisma.reply.findUnique({
       where: { id },
+    });
+  }
+
+  async getReplyByKeyword(keyword: string) {
+    return this.prisma.reply.findUnique({
+      where: {
+        keyword,
+      },
     });
   }
 
