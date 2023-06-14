@@ -9,7 +9,9 @@
     "dev:bot": "pnpm -F @cool-land/bot dev",
     "dev:server_nest": "pnpm -F @cool-land/server_nest start:dev",
     "build:bot": "pnpm -F @cool-land/bot build",
+    "build:plugin": "pnpm -F @cool-land/wechaty_plugin build",
     "build:client": "pnpm -F @cool-land/client build",
+    "prebuild": "pnpm run build:plugin && pnpm run build:bot",
     "prepare": "husky install",
     "lint-staged": "lint-staged",
     "commit": "cz"

@@ -16,23 +16,21 @@ model Bot {
   pid       Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-replys    Reply[]
-  
+  replys    Reply[]
 }
 
 model Reply {
   id        Int      @id @default(autoincrement())
-  keyword   String  @unique//关键词
+  keyword   String   @unique //关键词
   // ...other fields...//关键词
   content   String //回复内容
-  type      Int @default(0) //类型 0：普通消息 1：发送群邀请（仅限群） 2：发送好友邀请（仅限好友） 3：发送群邀请（仅限群） 4：发送好友邀请（仅限好友）
-  factor    Int  @default(0) //触发因子 0:通用 1：群聊 2:群聊  3:通用群聊
-  status    Int @default(0) //状态 0：停用 1：启用
-  roomId    Int 
-  botId     Int 
-  bot       Bot @relation(fields: [botId], references: [id])
-  remark    String 
+  type      Int      @default(0) //类型 0：普通消息 1：发送群邀请（仅限群） 2：发送好友邀请（仅限好友） 3：发送群邀请（仅限群） 4：发送好友邀请（仅限好友）
+  factor    Int      @default(0) //触发因子 0:通用 1：群聊 2:群聊  3:通用群聊
+  status    Int      @default(0) //状态 0：停用 1：启用
+  roomId    Int
+  botId     Int
+  bot       Bot      @relation(fields: [botId], references: [id])
+  remark    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
