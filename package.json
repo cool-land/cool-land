@@ -6,6 +6,7 @@
   "scripts": {
     "dev:comp": "pnpm -F @cool-land/components dev",
     "dev:client": "pnpm -F @cool-land/client dev",
+    "dev:db": "pnpm -F @cool-land/client db",
     "dev:bot": "pnpm -F @cool-land/bot dev",
     "dev:server_nest": "pnpm -F @cool-land/server_nest start:dev",
     "build:bot": "pnpm -F @cool-land/bot build",
