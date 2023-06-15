@@ -6,8 +6,7 @@ import { getMenu } from "./utils/getMenu";
 
 const LayoutMenu: FC = () => {
   const navigate = useNavigate();
-  const { pathname } = useLocation();
-  // const matches = useMatches();
+  const location = useLocation();
   // 活动菜单
   const [activeKey, setActiveKey] = useState<string[]>([]);
   // 路由表
@@ -19,11 +18,21 @@ const LayoutMenu: FC = () => {
     navigate(key);
     setActiveKey(key);
   };
+  // 判断pathname是否对应key
+  const isKey = (pathname: string, arr: any[]): boolean => {
+    return arr.some((item) => {
+      if (item.children) {
+        return isKey(pathname, item.children);
+      }
+      return item.key === pathname;
+    });
+  };
   // 根据路由变化,设置activeKey
   useEffect(() => {
-    // const currentMatch = matches[matches.length -1];
-    setActiveKey([pathname]);
-  }, [pathname]);
+    if (isKey(location.pathname, items)) {
+      setActiveKey([location.pathname]);
+    }
+  }, [location.pathname]);
 
   return (
     <nav className="nav-content">

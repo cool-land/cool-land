@@ -1,3 +1,4 @@
+// import { ErrorBoundary } from "@/components/errorBoundary";
 import "antd/es/style/reset.css";
 import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";

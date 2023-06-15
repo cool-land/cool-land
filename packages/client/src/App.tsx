@@ -2,6 +2,7 @@ import { useShallowBoundStore } from "@/store";
 import { ConfigProvider, Spin, theme } from "antd";
 import { Suspense, useEffect, useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import ErrorBoundary from "./components/errorBoundary";
 import Router from "./router";
 import AuthRouter from "./router/utils/AuthRouter";
 
@@ -28,9 +29,11 @@ const App = () => {
           algorithm,
         }}>
         <BrowserRouter>
-          <AuthRouter>
-            <Router />
-          </AuthRouter>
+          <ErrorBoundary>
+            <AuthRouter>
+              <Router />
+            </AuthRouter>
+          </ErrorBoundary>
         </BrowserRouter>
       </ConfigProvider>
     </Suspense>

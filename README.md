@@ -21,7 +21,10 @@ pnpm run prebuild
 ```bash
 pnpm run dev:client
 ```
-
+启动mock数据.
+```bash
+pnpm run dev:db
+```
 ### 服务端
 
 ```bash
