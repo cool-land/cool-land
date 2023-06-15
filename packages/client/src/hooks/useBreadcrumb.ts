@@ -8,7 +8,6 @@ export const useBreadcrumb = () => {
   const { pathname } = useLocation();
 
   const breadcrumb = useShallowBoundStore((state) => state.breadcrumb);
-  console.log("breadcrumb: ", breadcrumb);
 
   useEffect(() => {
     Object.keys(breadcrumb).map((key) => {

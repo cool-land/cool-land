@@ -13,11 +13,6 @@ const modules = import.meta.glob("../views/**/index.tsx");
 const lazyLoad = (modulePath: string) => {
   const Module = lazy(modules[`../views/${modulePath}.tsx`] as any);
   // const Module = lazy(() => import(`../views/Home/index`));
-  console.log("Module: ", Module);
-  console.log("modules: ", modules);
-  // console.log("modulePath: ", modulePath);
-
-  // return <Home />;
   return (
     <Suspense fallback={<Loading />}>
       <Module />

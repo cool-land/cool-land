@@ -1,27 +1,27 @@
-import { Bar } from "@cool-land/components";
-import { isNumber } from "@cool-land/utils";
-import { useRequest } from "ahooks";
+import { Card, Col, Row } from "antd";
 import styles from "./index.module.scss";
 
 export default function Home() {
-  // const { data, loading } = useRequest(testApi, {});
-
   return (
-    <div className={styles.container}>
-      <h1>Home</h1>
-      <h2>
-        欢迎来到<span>cool-land</span>
-      </h2>
-      <Bar title="这是@cool-land/components组件库中渲染的组件" />
-      <Bar
-        title={`这是从@cool-land/utils计算的结果（isNumber(1)）：${isNumber(
-          1,
-        )}`}
-      />
-      <div></div>
-      <div>
-        {/* {loading ? <div>loading...</div> : <div>{JSON.stringify(data)}</div>} */}
-      </div>
+    <div>
+      <Row gutter={16}>
+        <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+          <Card className={styles.card} title="机器人状态" bordered={false}>
+            机器人状态
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+          <Card className={styles.card} title="平台介绍" bordered={false}>
+            机器人智能管理平台，同时也是每日说的升级版。把一切配置化繁为简，
+            从代码配置到可视化配置，从必须手动启动到自动启动。让一切变的更简单，让一切配置都不见。
+          </Card>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={12} xl={8} xxl={8}>
+          <Card className={styles.card} title="系统消息" bordered={false}>
+            系统消息
+          </Card>
+        </Col>
+      </Row>
     </div>
   );
 }

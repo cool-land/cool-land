@@ -5,6 +5,47 @@
       "element": "Home/index",
       "label": "首页",
       "icon": "DashboardOutlined"
+    },
+    {
+      "path": "/robot",
+      "element": "Robot/index",
+      "label": "机器人管理",
+      "icon": "RobotOutlined"
+    },
+    {
+      "path": "/tags",
+      "element": "Tags/index",
+      "label": "关键词管理",
+      "icon": "TagsOutlined"
+    },
+    {
+      "path": "/chat",
+      "element": "Chat/index",
+      "label": "聊天管理",
+      "icon": "WechatOutlined"
+    },
+    {
+      "path": "/menu",
+      "label": "更多菜单",
+      "icon": "MenuOutlined",
+      "children": [
+        {
+          "path": "/menu1",
+          "label": "菜单一",
+          "element": "Menu/Menu1/index"
+        },
+        {
+          "path": "/menu2",
+          "label": "菜单二",
+          "element": "Menu/Menu2/index"
+        },
+        {
+          "path": "/menu1/:id/detail",
+          "label": "菜单详情",
+          "element": "Menu/MenuDetail/index",
+          "isHide": true
+        }
+      ]
     }
   ]
 
